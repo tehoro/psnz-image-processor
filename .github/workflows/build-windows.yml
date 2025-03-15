@@ -1,10 +1,8 @@
 name: Build Windows Executable
-
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: windows-latest
@@ -12,6 +10,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # This ensures we get all history for versioning
     
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -32,3 +32,24 @@ jobs:
       with:
         name: PSNZ-Image-Processor
         path: dist/*.exe
+        
+    - name: Get version
+      id: get_version
+      shell: bash
+      run: |
+        # Generate a version based on date and time
+        echo "version=$(date +'%Y.%m.%d.%H%M')" >> $GITHUB_OUTPUT
+        
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      if: github.ref == 'refs/heads/main'  # Only run this step when pushing to main
+      with:
+        name: PSNZ Image Processor v${{ steps.get_version.outputs.version }}
+        tag_name: v${{ steps.get_version.outputs.version }}
+        draft: false
+        prerelease: false
+        files: |
+          dist/*.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
