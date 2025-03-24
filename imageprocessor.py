@@ -36,7 +36,8 @@ class ImageProcessorThread(QThread):
     def run(self):
         try:
             # Read and validate CSV file
-            df = pd.read_csv(self.csv_path)
+            # Read and validate CSV file
+            df = pd.read_csv(self.csv_path, escapechar='\\', quoting=csv.QUOTE_MINIMAL)
             total_images = len(df)
             
             # Check required columns
@@ -323,7 +324,7 @@ class PSNZImageProcessor(QMainWindow):
             
             # Preview CSV
             try:
-                df = pd.read_csv(file_path)
+                df = pd.read_csv(file_path, escapechar='\\', quoting=csv.QUOTE_MINIMAL)
                 self.status_text.append(f"CSV contains {len(df)} image entries")
                 
                 # Validate CSV format
