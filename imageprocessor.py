@@ -15,8 +15,10 @@ import csv
 from pathlib import Path
 import warnings
 
-# Ignore PIL warnings from large image files
+# Disable PIL warnings and errors for extremely large images
 warnings.filterwarnings("ignore", category=Image.DecompressionBombWarning)
+# Completely disable the image size limit
+Image.MAX_IMAGE_PIXELS = None
 
 class ImageProcessorThread(QThread):
     """Thread for processing images to avoid freezing the UI"""
