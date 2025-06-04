@@ -283,16 +283,16 @@ class ImageProcessorThread(QThread):
             return None, f"Unexpected error: {str(e)}\nTraceback: {error_traceback}"
     
     def write_exif_csv(self, exif_csv_path, exif_data_list):
-      """Write EXIF data to CSV file"""
-      with open(exif_csv_path, 'w', newline='', encoding='utf-8') as csvfile:
-        fieldnames = ['FileName', 'OriginalFileName', 'Width', 'Height', 
-                     'DateTimeCreated', 'DateTimeOriginal']
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames, 
-                                escapechar='\\', 
-                                quoting=csv.QUOTE_MINIMAL)
-        writer.writeheader()
-        for data in exif_data_list:
-            writer.writerow(data)
+        """Write EXIF data to CSV file"""
+        with open(exif_csv_path, 'w', newline='', encoding='utf-8') as csvfile:
+            fieldnames = ['FileName', 'OriginalFileName', 'Width', 'Height',
+                         'DateTimeCreated', 'DateTimeOriginal']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames,
+                                    escapechar='\\',
+                                    quoting=csv.QUOTE_MINIMAL)
+            writer.writeheader()
+            for data in exif_data_list:
+                writer.writerow(data)
 
 class PSNZImageProcessor(QMainWindow):
     def __init__(self):
