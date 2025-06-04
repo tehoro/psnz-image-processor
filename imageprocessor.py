@@ -221,6 +221,7 @@ class ImageProcessorThread(QThread):
                 with Image.open(BytesIO(response.content)) as img:
                     # Get EXIF data before any modifications
                     exif_data = self.get_exif_data(img)
+                    exif_bytes = img.info.get('exif')
                     
                     # Add filename and original filename to exif data
                     exif_info = {
@@ -256,7 +257,10 @@ class ImageProcessorThread(QThread):
 
                     # Save full-size image
                     try:
-                        processed_img.save(filepath, "JPEG", quality=self.jpeg_quality)
+                        if self.remove_exif or not exif_bytes:
+                            processed_img.save(filepath, "JPEG", quality=self.jpeg_quality)
+                        else:
+                            processed_img.save(filepath, "JPEG", quality=self.jpeg_quality, exif=exif_bytes)
                     except Exception as e:
                         return None, f"Error saving fullsize image: {str(e)}"
 
